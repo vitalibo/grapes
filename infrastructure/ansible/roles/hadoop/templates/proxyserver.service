@@ -1,0 +1,15 @@
+[Unit]
+Description=Hadoop YARN ProxyServer daemon
+After=network.target
+
+[Service]
+User=yarn
+Group=hadoop
+Type=forking
+ExecStart={{ environments.HADOOP_HOME }}/bin/yarn --daemon start proxyserver
+ExecStop={{ environments.HADOOP_HOME }}/bin/yarn --daemon stop proxyserver
+WorkingDirectory={{ environments.HADOOP_HOME }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

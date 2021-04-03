@@ -1,0 +1,37 @@
+---
+- name: restart namenode
+  systemd:
+    state: restarted
+    name: "namenode"
+    enabled: true
+  when: node_type == 'master'
+- name: restart datanode
+  systemd:
+    state: restarted
+    name: "datanode"
+    enabled: true
+  when: node_type != 'master'
+- name: restart resourcemanager
+  systemd:
+    state: restarted
+    name: "resourcemanager"
+    enabled: true
+  when: node_type == 'master'
+- name: restart nodemanager
+  systemd:
+    state: restarted
+    name: "nodemanager"
+    enabled: true
+  when: node_type != 'master'
+- name: restart proxyserver
+  systemd:
+    state: restarted
+    name: "proxyserver"
+    enabled: true
+  when: node_type == 'master'
+- name: restart historyserver
+  systemd:
+    state: restarted
+    name: "historyserver"
+    enabled: true
+  when: node_type == 'master'

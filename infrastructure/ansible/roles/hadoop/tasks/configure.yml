@@ -1,0 +1,85 @@
+---
+- file:
+    path: "{{ environments.HADOOP_HOME }}"
+    state: directory
+    recurse: yes
+    owner: hadoop
+    group: "{{ group }}"
+    mode: 0775
+  when: unarchive_binary.changed
+
+- lineinfile:
+    dest: "{{ environments.HADOOP_HOME }}/etc/hadoop/hadoop-env.sh"
+    regexp: "^export JAVA_HOME="
+    line: "export JAVA_HOME={{ environments.JAVA_HOME }}"
+- lineinfile:
+    dest: "{{ environments.HADOOP_HOME }}/etc/hadoop/hadoop-env.sh"
+    regexp: "^export HADOOP_HOME="
+    line: "export HADOOP_HOME={{ environments.HADOOP_HOME }}"
+
+- file:
+    path: "{{ environments.HADOOP_HOME }}/logs"
+    state: directory
+    owner: hadoop
+    group: "{{ group }}"
+    mode: 0775
+- file:
+    path: "{{ environments.HADOOP_HOME }}/hdfs/namenode"
+    state: directory
+    owner: hdfs
+    group: "{{ group }}"
+    mode: 0775
+  register: namenode_dir
+- file:
+    path: "{{ environments.HADOOP_HOME }}/hdfs/datanode"
+    state: directory
+    owner: hdfs
+    group: "{{ group }}"
+    mode: 0775
+
+- template:
+    src: "{{ item }}"
+    dest: "{{ environments.HADOOP_HOME }}/etc/hadoop/{{ item }}"
+    owner: hadoop
+    group: "{{ group }}"
+    mode: 0775
+  loop: "{{ configurations }}"
+  notify:
+    - restart namenode
+    - restart datanode
+    - restart resourcemanager
+    - restart nodemanager
+#   - restart proxyserver
+#   - restart historyserver
+
+- name: format namenode
+  shell:
+    cmd: |
+      {{ hdfs }} --daemon stop namenode
+      {{ hdfs }} namenode -format -force
+  when: ( namenode_dir.changed ) and ( node_type == 'master' )
+  notify:
+    - restart namenode
+    - restart datanode
+  vars:
+    hdfs: "sudo -u hdfs {{ environments.HADOOP_HOME }}/bin/hdfs"
+
+- template:
+    src: "{{ item }}"
+    dest: "/lib/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ services }}"
+  notify:
+    - restart namenode
+    - restart datanode
+    - restart resourcemanager
+    - restart nodemanager
+#   - restart proxyserver
+#   - restart historyserver
+
+- systemd:
+    name: "{{ item }}"
+    daemon_reload: true
+  loop: "{{ services }}"

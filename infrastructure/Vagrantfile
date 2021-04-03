@@ -1,0 +1,71 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+NODES = 2
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+  config.vbguest.auto_update = false
+
+  config.vm.post_up_message = <<MSG
+---------------------------------------------------------------
+
+URLs:
+ - NameNode                     - http://192.168.50.10:9870/
+ - ResourceManager              - http://192.168.50.10:8088/
+ - MapReduce JobHistory Server  - http://192.168.50.10:19888/
+
+---------------------------------------------------------------
+MSG
+
+  config.vm.define :master do |master|
+    master.vm.hostname = "master"
+    master.vm.network :private_network, ip: "192.168.50.10", hostname: true
+
+    master.vm.provider :virtualbox do |vb|
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+
+    master.vm.provision :hosts do |provision|
+      provision.sync_hosts = true
+      provision.add_localhost_hostnames = false
+    end
+
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.galaxy_roles_path = "ansible/roles"
+      ansible.playbook = "ansible/playbooks/master.yml"
+      ansible.extra_vars = {
+        "nodes" => NODES
+      }
+    end
+  end
+
+  (1..NODES).each do |i|
+    config.vm.define "slave-#{i}" do |node|
+      node.vm.hostname = "slave-#{i}"
+      node.vm.network "private_network", ip: "192.168.50.#{i + 10}", hostname: true
+
+      node.vm.provider :virtualbox do |vb|
+        vb.memory = "2048"
+        vb.cpus = 1
+      end
+
+      node.vm.provision :hosts do |provision|
+        provision.sync_hosts = true
+        provision.add_localhost_hostnames = false
+      end
+
+      node.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.galaxy_roles_path = "ansible/roles"
+        ansible.playbook = "ansible/playbooks/slave.yml"
+        ansible.extra_vars = {
+          "nodes" => NODES
+        }
+      end
+    end
+  end
+end

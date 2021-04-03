@@ -1,0 +1,64 @@
+---
+node_type: slave
+nodes: 1
+
+version: 3.2.2
+mirrors:
+  - https://downloads.apache.org/hadoop/common
+
+environments:
+  HADOOP_HOME: "/opt/hadoop-{{ version }}"
+  HADOOP_INSTALL: $HADOOP_HOME
+  HADOOP_MAPRED_HOME: $HADOOP_HOME
+  HADOOP_COMMON_HOME: $HADOOP_HOME
+  HADOOP_HDFS_HOME: $HADOOP_HOME/hdfs
+  YARN_HOME: $HADOOP_HOME
+  HADOOP_COMMON_LIB_NATIVE_DIR: $HADOOP_HOME/lib/native
+  HADOOP_OPTS: '"-Djava.library.path: $HADOOP_HOME/lib/native"'
+  JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64/jre
+  PATH: $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+packages:
+  - openjdk-8-jdk
+
+group: hadoop
+users:
+  - hadoop
+  - hdfs
+  - yarn
+  - mapred
+
+configurations:
+  - core-site.xml
+  - hdfs-site.xml
+  - mapred-site.xml
+  - yarn-site.xml
+  - workers
+
+services:
+  - namenode.service
+  - datanode.service
+  - resourcemanager.service
+  - nodemanager.service
+  - proxyserver.service
+  - historyserver.service
+
+core_site:
+  "fs.default.name": hdfs://master:9000
+
+hdfs_site:
+  "dfs.namenode.name.dir": "{{ environments.HADOOP_HOME }}/hdfs/namenode"
+  "dfs.datanode.data.dir": "{{ environments.HADOOP_HOME }}/hdfs/datanode"
+  "dfs.namenode.secondary.http-address": master:50090
+  "dfs.replication": "{{ [ 3, nodes ] | min }}"
+
+mapred_site:
+  "mapreduce.framework.name": yarn
+  "yarn.app.mapreduce.am.env": "HADOOP_MAPRED_HOME={{ environments.HADOOP_HOME }}"
+  "mapreduce.map.env": "HADOOP_MAPRED_HOME={{ environments.HADOOP_HOME }}"
+  "mapreduce.reduce.env": "HADOOP_MAPRED_HOME={{ environments.HADOOP_HOME }}"
+
+yarn_site:
+  "yarn.acl.enable": 0
+  "yarn.resourcemanager.hostname": master
+  "yarn.nodemanager.aux-services": mapreduce_shuffle

@@ -3,4 +3,5 @@
 *dependency-reduced-pom.xml
 *target/
 .idea/
+.vagrant/
 *Run.java

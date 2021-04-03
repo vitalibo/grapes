@@ -1,0 +1,15 @@
+[Unit]
+Description=Hadoop MR HistoryServer daemon
+After=network.target
+
+[Service]
+User=mapred
+Group=hadoop
+Type=forking
+ExecStart={{ environments.HADOOP_HOME }}/bin/mapred --daemon start historyserver
+ExecStop={{ environments.HADOOP_HOME }}/bin/mapred --daemon stop historyserver
+WorkingDirectory={{ environments.HADOOP_HOME }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

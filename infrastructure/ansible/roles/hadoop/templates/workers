@@ -1,0 +1,5 @@
+{% for host in groups['all'] %}
+{% if hostvars[host]['inventory_hostname'] != 'master' %}
+{{ hostvars[host]['inventory_hostname'] }}
+{% endif %}
+{% endfor %}

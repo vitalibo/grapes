@@ -1,0 +1,35 @@
+---
+- block:
+    - get_url:
+        url: "{{ mirrors | random }}/hadoop-{{ version }}/hadoop-{{ version }}.{{ item }}"
+        dest: "/tmp/hadoop-{{ version }}.{{ item }}"
+        force: no
+      register: download_binary
+      until: download_binary is not failed
+      retries: 5
+      delay: 2
+      become: false
+      delegate_to: 127.0.0.1
+      loop: "{{ extensions }}"
+    - copy:
+        src: "/tmp/hadoop-{{ version }}.{{ item }}"
+        dest: "/opt/hadoop-{{ version }}.{{ item }}"
+      loop: "{{ extensions }}"
+      register: copy_binary
+  vars:
+    extensions:
+      - tar.gz
+      - tar.gz.sha512
+
+- name: check sha512sum
+  shell:
+    cmd: "sha512sum --check hadoop-{{ version }}.tar.gz.sha512"
+    chdir: "/opt"
+  when: copy_binary.changed
+
+- unarchive:
+    src: "/opt/hadoop-{{ version }}.tar.gz"
+    dest: "/opt"
+    copy: no
+  when: copy_binary.changed
+  register: unarchive_binary

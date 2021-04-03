@@ -1,0 +1,61 @@
+---
+- apt:
+    name: "{{ packages }}"
+    state: latest
+    update_cache: yes
+
+- group:
+    name: "{{ group }}"
+    state: present
+- user:
+    name: "{{ item }}"
+    state: present
+    groups: "{{ group }}"
+    shell: /bin/bash
+  loop: "{{ users }}"
+
+- name: export envs
+  lineinfile:
+    path: "/home/{{ item[0] }}/.profile"
+    regexp: "^export {{ item[1].key }}="
+    line: "export {{ item[1].key }}={{ item[1].value }}"
+  loop: "{{ users | product(environments | dict2items) | list }}"
+
+- lineinfile:
+    path: /etc/hosts
+    regexp: "^127.0.[1-9]"
+    state: absent
+
+- name: configure passwordless ssh
+  block:
+    - community.crypto.openssh_keypair:
+        path: /root/.ssh/id_rsa
+        type: ed25519
+        owner: root
+        group: root
+        mode: 0600
+    - file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+      loop: "{{ users }}"
+    - copy:
+        src: /root/.ssh/id_rsa
+        dest: "/home/{{ item }}/.ssh/id_rsa"
+        remote_src: yes
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: 0600
+      loop: "{{ users }}"
+    - fetch:
+        src: /root/.ssh/id_rsa.pub
+        dest: "{{ id_rsa_pub }}"
+        flat: yes
+      when: node_type == 'master'
+    - ansible.posix.authorized_key:
+        user: "{{ item }}"
+        state: present
+        key: "{{ lookup('file', '{{ id_rsa_pub }}') }}"
+      loop: "{{ users }}"
+  run_once: yes
+  vars:
+    id_rsa_pub: /tmp/ot6fuz6h-id_rsa.pub
