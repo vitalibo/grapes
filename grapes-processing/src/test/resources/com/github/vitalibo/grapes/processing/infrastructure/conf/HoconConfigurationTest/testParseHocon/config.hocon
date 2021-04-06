@@ -1,0 +1,48 @@
+default {
+  x: 123
+  z: "none"
+
+  app {
+    foo: BAR
+    number: 9.87
+
+    arr: [
+      "arr1",
+      "arr2",
+      "arr3"
+    ]
+
+    arr2: [
+      1,
+      2,
+      3
+    ]
+
+    properties {
+      "f0": "com.ctc.wstx.api.WstxInputProperties"
+    }
+  }
+}
+
+test {
+  x: y
+  y: z
+
+  app {
+    foo: bar
+    int: 1
+    double: 1.23
+    bool: true
+
+    arr2: [
+      11,
+      22,
+      33
+    ]
+
+    properties {
+      "f1.f2.f3": "com.apple.eio.FileManager"
+      "f4": "com.sun.java.accessibility.util.AWTEventMonitor"
+    }
+  }
+}

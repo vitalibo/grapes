@@ -1,1 +1,8 @@
 module: processing
+
+default {
+}
+
+wordcount {
+  "grapes.case.sensitive": false
+}
