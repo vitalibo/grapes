@@ -23,6 +23,7 @@ public class DriverTest {
         MockitoAnnotations.openMocks(this).close();
         driver = new Driver(mockFactory);
         Mockito.when(mockFactory.createWordCountJob(Mockito.any())).thenReturn(mockJob);
+        Mockito.when(mockFactory.createSocialNetworkImportJob(Mockito.any())).thenReturn(mockJob);
     }
 
     @Test
@@ -30,6 +31,17 @@ public class DriverTest {
         driver.run(new String[]{"wordcount"});
 
         Mockito.verify(mockFactory).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockJob).submit();
+        Mockito.verify(mockJob).waitForCompletion(true);
+    }
+
+    @Test
+    public void testRunSocialNetworkImportJob() throws Exception {
+        driver.run(new String[]{"socnetimp"});
+
+        Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory).createSocialNetworkImportJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
     }
@@ -41,6 +53,7 @@ public class DriverTest {
 
         Assert.assertEquals(actual.getMessage(), "Unknown job name");
         Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
         Mockito.verify(mockJob, Mockito.never()).submit();
         Mockito.verify(mockJob, Mockito.never()).waitForCompletion(true);
     }
@@ -54,6 +67,7 @@ public class DriverTest {
 
         Assert.assertEquals(actual.getMessage(), "foo");
         Mockito.verify(mockFactory).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob, Mockito.never()).waitForCompletion(true);
     }

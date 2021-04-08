@@ -19,6 +19,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hadoop.version>3.2.2</hadoop.version>
+        <vk.version>1.0.8</vk.version>
         <config.version>1.4.1</config.version>
         <pmd.version>6.26.0</pmd.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -27,12 +28,55 @@
         <mockito.version>3.6.28</mockito.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/profile/local</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/profile/dev</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
                 <version>${hadoop.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vk.api</groupId>
+                <artifactId>sdk</artifactId>
+                <version>${vk.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j-slf4j-impl</artifactId>
+                        <groupId>org.apache.logging.log4j</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.typesafe</groupId>

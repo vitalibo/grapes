@@ -1,0 +1,8 @@
+environment: local
+
+socnetimp {
+
+  grapes: {
+    clientClass: "com.github.vitalibo.grapes.processing.infrastructure.vk.impl.VkClientMock"
+  }
+}

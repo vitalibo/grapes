@@ -1,0 +1,40 @@
+module: processing
+
+default {
+}
+
+wordcount {
+  grapes.case.sensitive: false
+}
+
+socnetimp {
+  grapes {
+    split {
+      numbs: 4
+      startId: 1
+      endId: 100000
+    }
+
+    recordReader {
+      class: "com.github.vitalibo.grapes.processing.infrastructure.vk.VkUserRecordReader"
+    }
+
+    vk {
+      clientClass: "com.github.vitalibo.grapes.processing.infrastructure.vk.impl.VkClientProxy"
+      batchSize: 25
+
+      proxy {
+        retryAttemptsNetworkErrorCount: 3
+        retryAttemptsInvalidStatusCount: 5
+
+        actors {
+          1.id: 5357831
+          1.accessToken: "1e721b3899cb4e9b47ddf16774a9b9ed766eef00c4c6d9b475d6fbd5f3926f02d410450a247ddd11c45d0"
+
+          2.id: 5315140
+          2.accessToken: "ddabd63b7decac6f11324e9853a87620034fa68ec6dad0269c92da9529a745fc3fba5b571becbba5d66b3"
+        }
+      }
+    }
+  }
+}

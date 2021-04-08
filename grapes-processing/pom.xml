@@ -23,6 +23,10 @@
             <artifactId>hadoop-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.vk.api</groupId>
+            <artifactId>sdk</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
         </dependency>

@@ -22,6 +22,9 @@ public class Driver {
                 case "wordcount":
                     job = factory.createWordCountJob(args);
                     break;
+                case "socnetimp":
+                    job = factory.createSocialNetworkImportJob(args);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown job name");
             }
