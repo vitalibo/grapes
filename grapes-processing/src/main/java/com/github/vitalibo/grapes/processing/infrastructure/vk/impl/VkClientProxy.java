@@ -2,9 +2,7 @@ package com.github.vitalibo.grapes.processing.infrastructure.vk.impl;
 
 import com.github.vitalibo.grapes.processing.core.io.UserInputSplit;
 import com.github.vitalibo.grapes.processing.infrastructure.vk.VkClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.google.gson.*; // NOPMD
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.httpclient.HttpTransportClient;

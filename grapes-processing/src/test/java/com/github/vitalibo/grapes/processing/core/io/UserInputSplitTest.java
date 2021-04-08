@@ -1,9 +1,10 @@
 package com.github.vitalibo.grapes.processing.core.io;
 
+import com.github.vitalibo.grapes.processing.TestHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.IOException;
 
 public class UserInputSplitTest {
 
@@ -23,11 +24,9 @@ public class UserInputSplitTest {
     public void testSerDe() throws IOException {
         UserInputSplit original = new UserInputSplit(2, new int[]{1, 2, 3, 4});
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        original.write(new DataOutputStream(baos));
-        UserInputSplit actual = new UserInputSplit();
-        actual.readFields(new DataInputStream(new ByteArrayInputStream(baos.toByteArray())));
+        UserInputSplit actual = TestHelper.serDe(original, new UserInputSplit());
 
+        Assert.assertNotSame(original, actual);
         Assert.assertEquals(actual.getId(), 2);
         Assert.assertEquals(actual.getUsers(), new int[]{1, 2, 3, 4});
     }

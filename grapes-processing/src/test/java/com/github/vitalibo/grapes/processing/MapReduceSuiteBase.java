@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
+import org.apache.hadoop.io.SequenceFile;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -102,6 +103,21 @@ public class MapReduceSuiteBase {
             return new BufferedReader(new InputStreamReader(fsDataInputStream.getWrappedStream()))
                 .lines()
                 .collect(Collectors.joining(System.lineSeparator()));
+        }
+
+        public <K, V> SequenceFile.Writer createSequenceFile(String path,
+                                                             Class<K> keyCls, Class<V> valueCls) throws IOException {
+            return SequenceFile.createWriter(
+                fs.getConf(),
+                SequenceFile.Writer.file(new Path(path)),
+                SequenceFile.Writer.keyClass(keyCls),
+                SequenceFile.Writer.valueClass(valueCls));
+        }
+
+        public SequenceFile.Reader openSequenceFile(String path) throws IOException {
+            return new SequenceFile.Reader(
+                fs.getConf(),
+                SequenceFile.Reader.file(new Path(path)));
         }
 
     }

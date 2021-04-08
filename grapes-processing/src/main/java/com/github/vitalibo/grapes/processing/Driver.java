@@ -25,6 +25,9 @@ public class Driver {
                 case "socnetimp":
                     job = factory.createSocialNetworkImportJob(args);
                     break;
+                case "capacity":
+                    job = factory.createGraphCapacityJob(args);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown job name");
             }

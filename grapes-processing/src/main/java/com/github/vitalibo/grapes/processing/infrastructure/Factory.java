@@ -1,6 +1,7 @@
 package com.github.vitalibo.grapes.processing.infrastructure;
 
 import com.github.vitalibo.grapes.processing.core.JobDefinition;
+import com.github.vitalibo.grapes.processing.core.job.GraphCapacityJob;
 import com.github.vitalibo.grapes.processing.core.job.SocialNetworkImportJob;
 import com.github.vitalibo.grapes.processing.core.job.WordCountJob;
 import com.github.vitalibo.grapes.processing.infrastructure.conf.HoconConfiguration;
@@ -37,6 +38,10 @@ public class Factory {
 
     public Job createSocialNetworkImportJob(String[] args) throws IOException {
         return createJob(new SocialNetworkImportJob(), args);
+    }
+
+    public Job createGraphCapacityJob(String[] args) throws IOException {
+        return createJob(new GraphCapacityJob(), args);
     }
 
     private Job createJob(JobDefinition definition, String[] args) throws IOException {

@@ -5,20 +5,15 @@ import com.github.vitalibo.grapes.processing.TestHelper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public class WordCountJobTest extends MapReduceSuiteBase {
 
-    private WordCountJob definition;
-
-    @BeforeClass
-    public void setUp() {
-        definition = new WordCountJob();
-    }
+    private final WordCountJob definition = new WordCountJob();
 
     @Test
     public void testJob() throws Exception {
@@ -30,11 +25,7 @@ public class WordCountJobTest extends MapReduceSuiteBase {
         job.waitForCompletion(true);
 
         Assert.assertTrue(job.isSuccessful());
-        File path = TestHelper.resourceAsFile(TestHelper.resourcePath("output/"));
-        for (String name : Objects.requireNonNull(path.list())) {
-            Assert.assertEquals(fs.open("/output/" + name),
-                TestHelper.resourceAsString(TestHelper.resourcePath("output/" + name)));
-        }
+        assertOutputEquals("output/");
     }
 
     @Test
@@ -48,11 +39,7 @@ public class WordCountJobTest extends MapReduceSuiteBase {
         job.waitForCompletion(true);
 
         Assert.assertTrue(job.isSuccessful());
-        File path = TestHelper.resourceAsFile(TestHelper.resourcePath("output/"));
-        for (String name : Objects.requireNonNull(path.list())) {
-            Assert.assertEquals(fs.open("/output/" + name),
-                TestHelper.resourceAsString(TestHelper.resourcePath("output/" + name)));
-        }
+        assertOutputEquals("output/");
     }
 
     @Test
@@ -67,10 +54,14 @@ public class WordCountJobTest extends MapReduceSuiteBase {
         job.waitForCompletion(true);
 
         Assert.assertTrue(job.isSuccessful());
-        File path = TestHelper.resourceAsFile(TestHelper.resourcePath("output/"));
+        assertOutputEquals("output/");
+    }
+
+    private void assertOutputEquals(String fpath) throws IOException {
+        File path = TestHelper.resourceAsFile(TestHelper.resourcePath(fpath, 3));
         for (String name : Objects.requireNonNull(path.list())) {
-            Assert.assertEquals(fs.open("/output/" + name),
-                TestHelper.resourceAsString(TestHelper.resourcePath("output/" + name)));
+            Assert.assertEquals(fs.open("/" + fpath + name),
+                TestHelper.resourceAsString(TestHelper.resourcePath(fpath + name, 3)));
         }
     }
 

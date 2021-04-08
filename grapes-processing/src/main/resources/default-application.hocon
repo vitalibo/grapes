@@ -38,3 +38,7 @@ socnetimp {
     }
   }
 }
+
+capacity {
+  grapes.mapper.chunkSize: 100000
+}

@@ -3,6 +3,6 @@ environment: local
 socnetimp {
 
   grapes: {
-    clientClass: "com.github.vitalibo.grapes.processing.infrastructure.vk.impl.VkClientMock"
+    vk.clientClass: "com.github.vitalibo.grapes.processing.infrastructure.vk.impl.VkClientMock"
   }
 }
