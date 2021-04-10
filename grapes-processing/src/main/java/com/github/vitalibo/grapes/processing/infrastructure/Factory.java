@@ -1,6 +1,7 @@
 package com.github.vitalibo.grapes.processing.infrastructure;
 
-import com.github.vitalibo.grapes.processing.core.JobDefinition;
+import com.github.vitalibo.grapes.processing.core.Job;
+import com.github.vitalibo.grapes.processing.core.JobControlDefinition;
 import com.github.vitalibo.grapes.processing.core.job.GraphCapacityJob;
 import com.github.vitalibo.grapes.processing.core.job.SocialNetworkImportJob;
 import com.github.vitalibo.grapes.processing.core.job.WordCountJob;
@@ -9,7 +10,6 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import lombok.Getter;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import java.io.IOException;
@@ -44,10 +44,12 @@ public class Factory {
         return createJob(new GraphCapacityJob(), args);
     }
 
-    private Job createJob(JobDefinition definition, String[] args) throws IOException {
+    private Job createJob(JobControlDefinition definition, String[] args) throws IOException {
         final Configuration configuration = HoconConfiguration.parseHocon(defaultConfiguration, args[0]);
         GenericOptionsParser parser = new GenericOptionsParser(configuration, args);
-        return definition.defineJob(configuration, parser.getRemainingArgs());
+        return new Job(
+            definition.defineJobControl(
+                configuration, parser.getRemainingArgs()));
     }
 
 }

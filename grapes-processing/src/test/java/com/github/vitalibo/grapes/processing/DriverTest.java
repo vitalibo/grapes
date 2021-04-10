@@ -1,7 +1,7 @@
 package com.github.vitalibo.grapes.processing;
 
+import com.github.vitalibo.grapes.processing.core.Job;
 import com.github.vitalibo.grapes.processing.infrastructure.Factory;
-import org.apache.hadoop.mapreduce.Job;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

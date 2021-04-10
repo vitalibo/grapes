@@ -1,9 +1,9 @@
 package com.github.vitalibo.grapes.processing;
 
+import com.github.vitalibo.grapes.processing.core.Job;
 import com.github.vitalibo.grapes.processing.infrastructure.Factory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.hadoop.mapreduce.Job;
 
 @Slf4j
 @RequiredArgsConstructor
