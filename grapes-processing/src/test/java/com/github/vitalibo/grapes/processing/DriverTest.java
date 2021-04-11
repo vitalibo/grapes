@@ -26,6 +26,7 @@ public class DriverTest {
         Mockito.when(mockFactory.createSocialNetworkImportJob(Mockito.any())).thenReturn(mockJob);
         Mockito.when(mockFactory.createDijkstraAlgorithmJob(Mockito.any())).thenReturn(mockJob);
         Mockito.when(mockFactory.createGraphCapacityJob(Mockito.any())).thenReturn(mockJob);
+        Mockito.when(mockFactory.createDunbarNumberJob(Mockito.any())).thenReturn(mockJob);
     }
 
     @Test
@@ -35,6 +36,7 @@ public class DriverTest {
         Mockito.verify(mockFactory).createWordCountJob(Mockito.any());
         Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
         Mockito.verify(mockFactory, Mockito.never()).createDijkstraAlgorithmJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDunbarNumberJob(Mockito.any());
         Mockito.verify(mockFactory, Mockito.never()).createGraphCapacityJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
@@ -46,6 +48,7 @@ public class DriverTest {
 
         Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
         Mockito.verify(mockFactory).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDunbarNumberJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
     }
@@ -58,9 +61,24 @@ public class DriverTest {
         Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
         Mockito.verify(mockFactory).createDijkstraAlgorithmJob(Mockito.any());
         Mockito.verify(mockFactory, Mockito.never()).createGraphCapacityJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDunbarNumberJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
     }
+
+    @Test
+    public void testRunDunbarNumberJob() throws Exception {
+        driver.run(new String[]{"dunbar"});
+
+        Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDijkstraAlgorithmJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createGraphCapacityJob(Mockito.any());
+        Mockito.verify(mockFactory).createDunbarNumberJob(Mockito.any());
+        Mockito.verify(mockJob).submit();
+        Mockito.verify(mockJob).waitForCompletion(true);
+    }
+
 
     @Test
     public void testRunGraphCapacityJob() throws Exception {
@@ -70,6 +88,7 @@ public class DriverTest {
         Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
         Mockito.verify(mockFactory, Mockito.never()).createDijkstraAlgorithmJob(Mockito.any());
         Mockito.verify(mockFactory).createGraphCapacityJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDunbarNumberJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
     }

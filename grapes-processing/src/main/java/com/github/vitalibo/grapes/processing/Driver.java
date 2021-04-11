@@ -28,6 +28,9 @@ public class Driver {
                 case "dijkstra":
                     job = factory.createDijkstraAlgorithmJob(args);
                     break;
+                case "dunbar":
+                    job = factory.createDunbarNumberJob(args);
+                    break;
                 case "capacity":
                     job = factory.createGraphCapacityJob(args);
                     break;
