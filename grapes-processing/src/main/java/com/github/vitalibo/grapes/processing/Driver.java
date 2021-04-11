@@ -17,13 +17,16 @@ public class Driver {
 
     public void run(String[] args) throws Exception {
         try {
-            final Job job; // NOPMD
+            final Job job;
             switch (args[0]) {
                 case "wordcount":
                     job = factory.createWordCountJob(args);
                     break;
                 case "socnetimp":
                     job = factory.createSocialNetworkImportJob(args);
+                    break;
+                case "dijkstra":
+                    job = factory.createDijkstraAlgorithmJob(args);
                     break;
                 case "capacity":
                     job = factory.createGraphCapacityJob(args);

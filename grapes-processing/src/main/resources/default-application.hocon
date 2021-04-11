@@ -42,3 +42,12 @@ socnetimp {
 capacity {
   grapes.mapper.chunkSize: 100000
 }
+
+dijkstra {
+  grapes {
+    vertex {
+      initial: 16697463
+      target: 1
+    }
+  }
+}

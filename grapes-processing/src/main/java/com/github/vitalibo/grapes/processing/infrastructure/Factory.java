@@ -2,6 +2,7 @@ package com.github.vitalibo.grapes.processing.infrastructure;
 
 import com.github.vitalibo.grapes.processing.core.Job;
 import com.github.vitalibo.grapes.processing.core.JobControlDefinition;
+import com.github.vitalibo.grapes.processing.core.job.DijkstraAlgorithmJob;
 import com.github.vitalibo.grapes.processing.core.job.GraphCapacityJob;
 import com.github.vitalibo.grapes.processing.core.job.SocialNetworkImportJob;
 import com.github.vitalibo.grapes.processing.core.job.WordCountJob;
@@ -38,6 +39,10 @@ public class Factory {
 
     public Job createSocialNetworkImportJob(String[] args) throws IOException {
         return createJob(new SocialNetworkImportJob(), args);
+    }
+
+    public Job createDijkstraAlgorithmJob(String[] args) throws IOException {
+        return createJob(new DijkstraAlgorithmJob(), args);
     }
 
     public Job createGraphCapacityJob(String[] args) throws IOException {

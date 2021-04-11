@@ -8,12 +8,18 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
+import org.apache.hadoop.io.ArrayPrimitiveWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -112,6 +118,45 @@ public class MapReduceSuiteBase {
                 SequenceFile.Writer.file(new Path(path)),
                 SequenceFile.Writer.keyClass(keyCls),
                 SequenceFile.Writer.valueClass(valueCls));
+        }
+
+        public void createSequenceFile(String path) throws IOException {
+            final IntWritable key = new IntWritable();
+            final ArrayPrimitiveWritable value = new ArrayPrimitiveWritable();
+            SequenceFile.Writer writer = createSequenceFile("/" + path, IntWritable.class, ArrayPrimitiveWritable.class);
+            List<Map.Entry<Integer, int[]>> entries = TestHelper.resourceAsListPair(
+                TestHelper.resourcePath(path + ".txt", 3));
+            for (Map.Entry<Integer, int[]> entry : entries) {
+                key.set(entry.getKey());
+                value.set(entry.getValue());
+                writer.append(key, value);
+            }
+
+            writer.hflush();
+            writer.close();
+        }
+
+        public void createTextFile(String target) throws IOException {
+            create("/" + target,
+                TestHelper.resourceAsString(
+                    TestHelper.resourcePath(target + ".txt", 3)));
+        }
+
+        public void assertEqualsSequenceFile(String path) throws IOException {
+            final IntWritable key = new IntWritable();
+            final ArrayPrimitiveWritable value = new ArrayPrimitiveWritable();
+            SequenceFile.Reader reader = openSequenceFile("/" + path);
+            List<Map.Entry<Integer, int[]>> expected = TestHelper.resourceAsListPair(
+                TestHelper.resourcePath(path + ".txt", 3));
+            Map<Integer, int[]> actual = new HashMap<>();
+            while (reader.next(key, value)) {
+                actual.put(key.get(), (int[]) value.get());
+            }
+
+            Assert.assertEquals(actual.size(), expected.size());
+            for (Map.Entry<Integer, int[]> entry : expected) {
+                Assert.assertEquals(actual.get(entry.getKey()), entry.getValue());
+            }
         }
 
         public SequenceFile.Reader openSequenceFile(String path) throws IOException {

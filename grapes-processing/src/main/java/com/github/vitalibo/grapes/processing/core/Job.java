@@ -33,6 +33,7 @@ public class Job {
 
     public void submit() {
         jobControlThread = new Thread(jobControl);
+        jobControlThread.setDaemon(true);
         jobControlThread.start();
     }
 
@@ -46,7 +47,7 @@ public class Job {
                 reflectionGetPrivateField(org.apache.hadoop.mapreduce.Job.class, "state");
 
             for (ControlledJob controlledJob : jobs) {
-                new Thread(() -> {
+                Thread thread = new Thread(() -> {
                     while (jobState.apply(controlledJob.getJob()) == org.apache.hadoop.mapreduce.Job.JobState.DEFINE) {
                         try {
                             Thread.sleep(1000);
@@ -55,7 +56,9 @@ public class Job {
                     }
 
                     monitorAndPrintJob(controlledJob.getJob());
-                }).start();
+                });
+                thread.setDaemon(true);
+                thread.start();
             }
         }
 
@@ -140,7 +143,7 @@ public class Job {
                         String[] taskDiagnostics = job.getTaskDiagnostics(taskId);
                         if (taskDiagnostics != null) {
                             for (String diagnostics : taskDiagnostics) {
-                                System.err.println(diagnostics);
+                                System.err.println(diagnostics); // NOPMD
                             }
                         }
                     }

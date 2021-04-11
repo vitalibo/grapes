@@ -1,18 +1,14 @@
 package com.github.vitalibo.grapes.processing.core.mapper;
 
-import com.github.vitalibo.grapes.processing.core.util.Throwing;
+import com.github.vitalibo.grapes.processing.core.util.Paths;
 import lombok.RequiredArgsConstructor;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -36,11 +32,7 @@ public class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
         caseSensitive = configuration.getBoolean("grapes.case.sensitive", true);
 
         if (configuration.getBoolean("grapes.skip.patterns", false)) {
-            Arrays.stream(context.getCacheFiles())
-                .map(patternsURI -> new Path(patternsURI.getPath()))
-                .map(Path::getName)
-                .flatMap(Throwing.function(name -> new BufferedReader(new FileReader(name))
-                    .lines()))
+            Paths.cacheFilesAsTextLines(context.getCacheFiles())
                 .forEach(patternsToSkip::add);
         }
     }

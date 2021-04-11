@@ -12,7 +12,7 @@ public interface JobDefinition extends JobControlDefinition {
 
     @Override
     default JobControl defineJobControl(Configuration configuration, String[] args) throws IOException {
-        final Job job = defineJob(configuration, args);
+        final Job job = defineJob(configuration, args); // NOPMD
 
         final JobControl jobControl = new JobControl("default");
         ControlledJob controlledJob = new ControlledJob(configuration);

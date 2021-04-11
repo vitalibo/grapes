@@ -24,6 +24,8 @@ public class DriverTest {
         driver = new Driver(mockFactory);
         Mockito.when(mockFactory.createWordCountJob(Mockito.any())).thenReturn(mockJob);
         Mockito.when(mockFactory.createSocialNetworkImportJob(Mockito.any())).thenReturn(mockJob);
+        Mockito.when(mockFactory.createDijkstraAlgorithmJob(Mockito.any())).thenReturn(mockJob);
+        Mockito.when(mockFactory.createGraphCapacityJob(Mockito.any())).thenReturn(mockJob);
     }
 
     @Test
@@ -32,6 +34,8 @@ public class DriverTest {
 
         Mockito.verify(mockFactory).createWordCountJob(Mockito.any());
         Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDijkstraAlgorithmJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createGraphCapacityJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
     }
@@ -42,6 +46,30 @@ public class DriverTest {
 
         Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
         Mockito.verify(mockFactory).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockJob).submit();
+        Mockito.verify(mockJob).waitForCompletion(true);
+    }
+
+    @Test
+    public void testRunDijkstraAlgorithmJob() throws Exception {
+        driver.run(new String[]{"dijkstra"});
+
+        Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockFactory).createDijkstraAlgorithmJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createGraphCapacityJob(Mockito.any());
+        Mockito.verify(mockJob).submit();
+        Mockito.verify(mockJob).waitForCompletion(true);
+    }
+
+    @Test
+    public void testRunGraphCapacityJob() throws Exception {
+        driver.run(new String[]{"capacity"});
+
+        Mockito.verify(mockFactory, Mockito.never()).createWordCountJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createSocialNetworkImportJob(Mockito.any());
+        Mockito.verify(mockFactory, Mockito.never()).createDijkstraAlgorithmJob(Mockito.any());
+        Mockito.verify(mockFactory).createGraphCapacityJob(Mockito.any());
         Mockito.verify(mockJob).submit();
         Mockito.verify(mockJob).waitForCompletion(true);
     }
