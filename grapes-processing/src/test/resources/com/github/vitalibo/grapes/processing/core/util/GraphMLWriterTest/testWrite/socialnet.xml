@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+	<graph edgedefault="undirected">
+		<key id="name" for="node" attr.name="name" attr.type="string"/>
+		<key id="gender" for="node" attr.name="gender" attr.type="string"/>
+		<key id="relation" for="edge" attr.name="relation" attr.type="string"/>
+		<node id="1">
+			<data key="gender">M</data>
+			<data key="name">Jeff</data>
+		</node>
+		<node id="2">
+			<data key="gender">M</data>
+			<data key="name">Ed</data>
+		</node>
+		<node id="3">
+			<data key="gender">M</data>
+			<data key="name">Christiaan</data>
+		</node>
+		<node id="4">
+			<data key="gender">F</data>
+			<data key="name">Emily</data>
+		</node>
+		<node id="5">
+			<data key="gender">M</data>
+			<data key="name">Adam</data>
+		</node>
+		<node id="6">
+			<data key="gender">F</data>
+			<data key="name">Cynthia</data>
+		</node>
+		<edge source="1" target="2">
+			<data key="relation">brother</data>
+		</edge>
+		<edge source="1" target="4">
+			<data key="relation">wife</data>
+		</edge>
+		<edge source="1" target="3"/>
+		<edge source="1" target="5">
+			<data key="relation">son</data>
+		</edge>
+		<edge source="4" target="5">
+			<data key="relation">son</data>
+		</edge>
+		<edge source="1" target="6">
+			<data key="relation">daughter</data>
+		</edge>
+		<edge source="4" target="6">
+			<data key="relation">daughter</data>
+		</edge>
+	</graph>
+</graphml>

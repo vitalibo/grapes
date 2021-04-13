@@ -1,10 +1,11 @@
 package com.github.vitalibo.grapes.processing.core.job;
 
 import com.github.vitalibo.grapes.processing.core.JobControlDefinition;
+import com.github.vitalibo.grapes.processing.core.io.GraphMLOutputFormat;
 import com.github.vitalibo.grapes.processing.core.io.model.MultipleInputWritable;
 import com.github.vitalibo.grapes.processing.core.io.model.VisitedVertexWritable;
 import com.github.vitalibo.grapes.processing.core.mapper.AdjacencyVertexMapper;
-import com.github.vitalibo.grapes.processing.core.mapper.AfterReduceMapper;
+import com.github.vitalibo.grapes.processing.core.mapper.ShortestPathCombinerDecorator;
 import com.github.vitalibo.grapes.processing.core.mapper.MultipleInputFilterMapper;
 import com.github.vitalibo.grapes.processing.core.mapper.MultipleInputMapper;
 import com.github.vitalibo.grapes.processing.core.reducer.JoinReducer;
@@ -97,7 +98,7 @@ public class DijkstraAlgorithmJob implements JobControlDefinition {
 
         ChainReducer.setReducer(job, ShortestPathCombiner.class, IntWritable.class, ArrayPrimitiveWritable.class,
             IntWritable.class, ArrayPrimitiveWritable.class, configuration);
-        ChainReducer.addMapper(job, AfterReduceMapper.class, IntWritable.class, ArrayPrimitiveWritable.class,
+        ChainReducer.addMapper(job, ShortestPathCombinerDecorator.class, IntWritable.class, ArrayPrimitiveWritable.class,
             IntWritable.class, ArrayPrimitiveWritable.class, configuration);
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(ArrayPrimitiveWritable.class);
@@ -105,6 +106,8 @@ public class DijkstraAlgorithmJob implements JobControlDefinition {
         SequenceFileOutputFormat.setOutputPath(job, new Path(dir + phase + "/out"));
         MultipleOutputs.addNamedOutput(job, "cache", TextOutputFormat.class,
             IntWritable.class, NullWritable.class);
+        MultipleOutputs.addNamedOutput(job, "sixdegrees", GraphMLOutputFormat.class,
+            IntWritable.class, ArrayPrimitiveWritable.class);
 
         final ControlledJob controlledJob = new ControlledJob(configuration);
         controlledJob.setJob(job);

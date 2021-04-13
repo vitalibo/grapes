@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-public class AfterReduceMapper extends Mapper<IntWritable, ArrayPrimitiveWritable, IntWritable, ArrayPrimitiveWritable> {
+public class ShortestPathCombinerDecorator extends Mapper<IntWritable, ArrayPrimitiveWritable, IntWritable, ArrayPrimitiveWritable> {
 
     private final Function<Context, MultipleOutputs<IntWritable, ? extends Writable>> multipleOutputFactory;
 
@@ -23,7 +23,7 @@ public class AfterReduceMapper extends Mapper<IntWritable, ArrayPrimitiveWritabl
     private Counter counter;
     private Integer target;
 
-    public AfterReduceMapper() {
+    public ShortestPathCombinerDecorator() {
         this(MultipleOutputs::new);
     }
 
@@ -43,6 +43,7 @@ public class AfterReduceMapper extends Mapper<IntWritable, ArrayPrimitiveWritabl
 
         if (target != null && target == key.get()) {
             counter.increment(1);
+            multipleOutput.write("sixdegrees", key, value);
         }
     }
 

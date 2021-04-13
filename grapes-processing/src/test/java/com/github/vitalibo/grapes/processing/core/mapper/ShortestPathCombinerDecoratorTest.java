@@ -14,23 +14,23 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class AfterReduceMapperTest {
+public class ShortestPathCombinerDecoratorTest {
 
     @Mock
     private MultipleOutputs<IntWritable, ? extends Writable> mockMultipleOutputs;
     @Mock
     private Configuration mockConfiguration;
     @Mock
-    private AfterReduceMapper.Context mockContext;
+    private ShortestPathCombinerDecorator.Context mockContext;
     @Mock
     private Counter mockCounter;
 
-    private AfterReduceMapper mapper;
+    private ShortestPathCombinerDecorator mapper;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this).close();
-        mapper = new AfterReduceMapper((c) -> mockMultipleOutputs);
+        mapper = new ShortestPathCombinerDecorator((c) -> mockMultipleOutputs);
         Mockito.when(mockContext.getConfiguration()).thenReturn(mockConfiguration);
         Mockito.when(mockContext.getCounter(Mockito.anyString(), Mockito.anyString())).thenReturn(mockCounter);
     }
@@ -44,7 +44,8 @@ public class AfterReduceMapperTest {
         mapper.map(key, value, mockContext);
 
         Mockito.verify(mockContext).write(key, value);
-        Mockito.verify(mockCounter, Mockito.never()).increment(Mockito.anyInt());
+        Mockito.verify(mockCounter, Mockito.never()).increment(Mockito.anyLong());
+        Mockito.verify(mockMultipleOutputs, Mockito.never()).write("sixdegrees", key, value);
     }
 
     @Test
@@ -57,7 +58,8 @@ public class AfterReduceMapperTest {
         mapper.map(key, value, mockContext);
 
         Mockito.verify(mockContext).write(key, value);
-        Mockito.verify(mockCounter, Mockito.never()).increment(Mockito.anyInt());
+        Mockito.verify(mockCounter, Mockito.never()).increment(Mockito.anyLong());
+        Mockito.verify(mockMultipleOutputs, Mockito.never()).write("sixdegrees", key, value);
     }
 
     @Test
@@ -70,7 +72,8 @@ public class AfterReduceMapperTest {
         mapper.map(key, value, mockContext);
 
         Mockito.verify(mockContext).write(key, value);
-        Mockito.verify(mockCounter, Mockito.never()).increment(Mockito.anyInt());
+        Mockito.verify(mockCounter).increment(Mockito.anyLong());
+        Mockito.verify(mockMultipleOutputs).write("sixdegrees", key, value);
     }
 
     @Test

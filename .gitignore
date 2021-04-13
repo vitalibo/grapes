@@ -5,3 +5,4 @@
 .idea/
 .vagrant/
 *Run.java
+data/

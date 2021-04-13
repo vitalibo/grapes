@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+	<graph edgedefault="undirected">
+		<key id="id" for="node" attr.name="id" attr.type="string"/>
+		<key id="step" for="node" attr.name="step" attr.type="int"/>
+		<node id="5197">
+			<data key="step">3</data>
+			<data key="id">5197</data>
+		</node>
+		<node id="542">
+			<data key="step">2</data>
+			<data key="id">542</data>
+		</node>
+		<edge source="5197" target="542"/>
+		<node id="132">
+			<data key="step">1</data>
+			<data key="id">132</data>
+		</node>
+		<edge source="542" target="132"/>
+		<node id="111">
+			<data key="step">0</data>
+			<data key="id">111</data>
+		</node>
+		<edge source="132" target="111"/>
+	</graph>
+</graphml>
