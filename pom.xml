@@ -19,6 +19,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hadoop.version>3.2.2</hadoop.version>
+        <prefuse.version>beta-20071021</prefuse.version>
         <vk.version>1.0.8</vk.version>
         <config.version>1.4.1</config.version>
         <pmd.version>6.26.0</pmd.version>
@@ -77,6 +78,11 @@
                         <groupId>org.apache.logging.log4j</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.prefuse</groupId>
+                <artifactId>prefuse</artifactId>
+                <version>${prefuse.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.typesafe</groupId>
@@ -151,6 +157,9 @@
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
                     </excludeRoots>
+                    <excludes>
+                        <exclude>prefuse/**</exclude>
+                    </excludes>
                     <rulesets>
                         <ruleset>https://raw.githubusercontent.com/vitalibo/pmd-java-rules/master/ruleset.xml</ruleset>
                     </rulesets>
